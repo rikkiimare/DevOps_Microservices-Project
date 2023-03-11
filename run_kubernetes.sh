@@ -5,19 +5,19 @@
 
 # Step 1:
 # This is your Docker ID/path
-dockerpath="app"
+dockerpath="riccardopixel/udacity-build-app:v1"
 
 # Step 2
 # Run the Docker Hub container with kubernetes
-kubectl run basicappdemo \
-    --overrides='{ "apiVersion|: "v1"}' \
+kubectl run prediction \
     --image=$dockerpath \
-    --port=80 --labels app=basicappdemo
+    --port=80 --labels app=prediction
 
 # Step 3:
 # List kubernetes pods
 kubectl get pods
+kubectl wait --for=condition=Ready pod/prediction
 
 # Step 4:
 # Forward the container port to a host
-kubectl port-forward basic_app_demo 8000:80
+kubectl port-forward prediction 8000:80

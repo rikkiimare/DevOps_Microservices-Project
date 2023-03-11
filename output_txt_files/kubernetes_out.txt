@@ -1,1 +1,17 @@
 <paste log output from Kubernetes-mediated prediction, here>
+
+(.dev-ops) (base) SPJDevs-MacBook-Pro:project-ml-microservice-kubernetes RJIUser$ ./run_kubernetes.sh 
+pod/prediction created
+NAME           READY   STATUS              RESTARTS   AGE
+prediction     0/1     ContainerCreating   0          0s
+pod/prediction condition met
+Forwarding from 127.0.0.1:8000 -> 80
+Forwarding from [::1]:8000 -> 80
+Handling connection for 8000
+
+}' -H 'Content-Type: application/json' -X POST http://localhost:8000/predict
+{
+  "prediction": [
+    20.35373177134412
+  ]
+}
