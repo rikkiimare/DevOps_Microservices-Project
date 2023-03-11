@@ -45,6 +45,7 @@ source .devops/bin/activate
 ### Kubernetes Steps
 
 * Setup and Configure Docker locally
+  * Use the following link to find instructions to install [Docker](https://docs.docker.com/engine/install/)
 * Setup and Configure Kubernetes locally
 * Create Flask app in Container
 * Run via kubectl
