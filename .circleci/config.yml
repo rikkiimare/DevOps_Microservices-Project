@@ -2,7 +2,7 @@
 #
 # Check https://circleci.com/docs/2.0/language-python/ for more details
 #
-version: 2
+version: 2.1
 
 jobs:
   build-out:
@@ -14,7 +14,6 @@ jobs:
 
     steps:
       - checkout
-
       #  Download and cache dependencies
       - restore_cache:
           keys:
@@ -43,7 +42,7 @@ jobs:
             . venv/bin/activate
             make lint 
 
-workflows:
-  default:
-    jobs:
-      - build-out
+# workflows:
+#   default:
+#     jobs:
+#       - build-out
