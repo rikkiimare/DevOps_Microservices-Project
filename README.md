@@ -45,7 +45,72 @@ source .devops/bin/activate
 ### Kubernetes Steps
 
 * Setup and Configure Docker locally
-  * Use the following link to find instructions to install [Docker](https://docs.docker.com/engine/install/)
+ * Use the following link to find instructions to install [Docker](https://docs.docker.com/engine/install/)
+
 * Setup and Configure Kubernetes locally
+ * Use [kubernetes](https://kubernetes.io/docs/tasks/tools/) website to access install procedures for multiple OS type
+
 * Create Flask app in Container
+
+   # The steps can be performed by running the shell script below:
+     "run_docker.sh"
+   OR
+   # Confirm kubectl install & version
+     kubectl version
+   # Build image and add a descriptive tag
+     docker build --tag riccardopixel/udacity-build-app:v1 .
+   # Run flask app
+     docker run -d -p 8000:80 riccardopixel/udacity-build-app:v1 
+   confirm access to the app by running < curl localhost:8000 > from a new terminal  
+     
 * Run via kubectl
+  
+   # The steps can be performed by running the shell script below:
+     "run_kubernetes.sh"
+   OR
+   # Run docker image within kubernetes
+     kubectl run prediction --image=riccardopixel/udacity-build-app:v1 --port=80 --labels app=prediction
+   # List kubernetes pods
+     kubectl get pods
+   ### Once pods are in a 'Ready' state  
+   # Forward the container port to a host
+     kubectl port-forward prediction 8000:80
+     
+### Files in the Repository
+
+# .circleci/config.yml:
+Contains circleci jobs that tests the validity of the build of the flash-app.  The repo links with circleci to automatically run these jobs whenever changes are pushed up to this repo.  At the very top of this README.md file you can find the result of the latest commit.
+
+# docker_out.txt:
+Show the output from docker logs and a text grab post running make_prediction.sh
+
+# kubernetes_out.txt:
+Standard output to be expected from running run_kubernetes.sh
+
+# app.py:
+python script which is provided with data in json format and provides prodictions based on that data.
+
+# Dockerfile:
+Dockerfile's content is set up to be able to create a docker build from.
+
+# make_predictions.sh:
+Calls the local instance on port 8000.
+
+# Makefile:
+Makefile provides steps for building out the solution with setup, install, test & lint parameters.
+
+# requirements.txt:
+List of python module/libraries that are required for app.py.
+
+# run_docker.sh:
+Script to run through the steps to build a docker image and run the flask-app on port 8000
+
+# run_kubernetes.sh:
+Dockerpath provided from the build process in run_docker.sh. - 'docker images' can give you the repository name if required.
+Run container in Kubernetes referencing the dockerpath
+Once pods are running open up port 8000 to provide access to the app
+
+# upload_docker.sh:
+Dockerpath provided from the build process in run_docker.sh. - 'docker images' can give you the repository name if required.
+login to Docker
+push the Docker image up referencing the Dockerpath.
