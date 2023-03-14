@@ -4,6 +4,9 @@
 #
 version: 2.1
 
+orbs:
+  terraform: circleci/terraform@3.2.0
+
 tf-docker-image: &tf-docker-image
    docker:
       - image: circleci/terraform@3.2.0
@@ -57,7 +60,28 @@ jobs:
             . venv/bin/activate
             make lint 
 
+  deploy-infra:
+    <<: *tf-docker-image
+    steps:
+      - checkout
+      - terraform/init:
+          path: .
+      - terraform/validate:
+          path: .
+      - terraform/fmt:
+          path: .
+      # - terraform/plan:
+      #     var: "TF_VAR_AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID, TF_VAR_AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY"
+      #     path: .
+      # - terraform/apply:
+      #     path: .
+    working_directory: ~/.circleci/files
+
+
 workflows:
   build-and-test:
     jobs:
       - build-out
+      - deploy-infra:
+          requires:
+            - build-out
