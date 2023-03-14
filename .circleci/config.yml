@@ -126,12 +126,11 @@ jobs:
             pwd
             ls
             echo `cat inventory.txt`
-            cd ../..
-            ansible-playbook -i .circleci/ansible/inventory.txt .circleci/ansible/configure-server.yml
+            ansible-playbook -i inventory.txt configure-server.yml
       - persist_to_workspace:
           root: ~/
           paths:
-            - .circleci/ansible/.env            
+            - project/.circleci/ansible/.env            
 
 workflows:
   build-and-test:
