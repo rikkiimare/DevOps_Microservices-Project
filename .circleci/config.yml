@@ -107,6 +107,29 @@ jobs:
       - destroy-environment:
           workflow_id: ${CIRCLE_WORKFLOW_ID:0:7}
 
+  configure-infrastructure:
+    <<: *ansible-docker-image
+    steps:
+      - checkout
+      - add_ssh_keys:
+          fingerprints: 
+            - "df:d4:27:43:6f:dc:01:ea:99:ec:ab:03:34:a3:60:38"
+      - attach_workspace:      # attach workspace!
+          at: ~/
+      - run:
+          name: Configure server
+          command: |
+            cd .circleci/ansible/
+            echo AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID} >> ".env"
+            echo AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY} >> ".env"
+            cat .env
+            cd ../..
+            ansible-playbook -i .circleci/ansible/inventory.txt .circleci/ansible/configure-server.yml
+      - persist_to_workspace:
+          root: ~/
+          paths:
+            - .circleci/ansible/.env            
+
 workflows:
   build-and-test:
     jobs:
@@ -114,3 +137,6 @@ workflows:
       - deploy-infra:
           requires:
             - build-out
+      - configure-infrastructure:
+          requires:
+            - deploy-infra

@@ -1,0 +1,29 @@
+---
+- name: "update dependencies"
+  apt:
+    name: [apt-transport-https, ca-certificates, curl, gnupg, lsb-release]
+
+- name: "Add docker gpg Key"
+  apt_key:
+    url: https://download.docker.com/linux/ubuntu/gpg
+    state: present
+  
+- name: "Add Docker Repo"
+  apt_repository:
+    repo: deb https://download.docker.com/linux/ubuntu jammy stable
+    state: present
+
+
+- name: Update apt and install docker-ce
+  apt:
+    name: [docker-ce, python3-pip]
+    state: latest
+    update_cache: true
+
+- name: "install Docker dependencies"
+  apt: 
+    name: [docker-ce-cli, containerd.io]
+    state: latest
+- name: Install Docker Module for Python
+  pip:
+    name: docker
