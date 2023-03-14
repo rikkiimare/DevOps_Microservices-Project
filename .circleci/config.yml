@@ -7,6 +7,22 @@ version: 2.1
 orbs:
   terraform: circleci/terraform@3.1.0
 
+commands:
+  destroy-environment:
+    description: Destory backend / frontend cloudformation  & s3 bucket on fail
+    parameters:
+      workflow_id:
+        type: string
+    steps:
+      - run:
+          name: Destory environments
+          when: on_fail
+          command: |
+            echo "Destroying environments: << parameters.workflow_id >>"
+            # aws s3 rm s3://udapeople-<< parameters.workflow_id >> --recursive --region us-east-1
+            aws cloudformation delete-stack --stack-name udapeople-backend-<< parameters.workflow_id >> --region us-east-1
+            # aws cloudformation delete-stack --stack-name udapeople-frontend-<< parameters.workflow_id >> --region us-east-1
+
 tf-docker-image: &tf-docker-image
    docker:
       #- image: circleci/terraform@3.1.0
@@ -75,22 +91,22 @@ jobs:
               --stack-name "udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7}" \
               --parameter-overrides ID="${CIRCLE_WORKFLOW_ID:0:7}" \
               --region us-east-1
-      # - terraform/init:
-      #     path: .
-      # - terraform/validate:
-      #     path: .
-      # - terraform/fmt:
-      #     path: .
-      # - terraform/plan:
-      #     var: "TF_VAR_AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID, TF_VAR_AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY"
-      #     path: .
-      # - terraform/apply:
-      #     path: .
+      - run:
+          name: Add back-end ip to ansible inventory
+          command: |
+            # Query EC2 instances in the backend using the workflowID and export the IP address to ansible/inventory
+            aws ec2 describe-instances \
+              --filters "Name=tag:Name,Values=backend-${CIRCLE_WORKFLOW_ID:0:7}" \
+              --query "Reservations[*].Instances[*].PublicDnsName" \
+              --region us-east-1 \
+              --output text >> .circleci/ansible/inventory.txt
+            echo `cat .circleci/ansible/inventory.txt`
       - persist_to_workspace:
-          root: .
+          root: ~/
           paths:
-            - .
-
+            - project/.circleci/ansible/inventory.txt
+      - destroy-environment:
+          workflow_id: ${CIRCLE_WORKFLOW_ID:0:7}
 
 workflows:
   build-and-test:
