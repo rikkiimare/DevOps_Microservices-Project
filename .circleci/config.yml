@@ -119,7 +119,7 @@ jobs:
       - run:
           name: Configure server
           command: |
-            cd project/.circleci/ansible/
+            cd .circleci/ansible/
             echo AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID} >> ".env"
             echo AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY} >> ".env"
             cat .env
