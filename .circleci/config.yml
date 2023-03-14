@@ -23,6 +23,9 @@ ansible-docker-image: &ansible-docker-image
 python-docker-image: &python-docker-image
    docker:
       - image: python3.7.3-stretch
+        auth:
+          username: $DOCKERHUB_USER
+          password: $DOCKERHUB_PASSWORD
 
 jobs:
   build-out:
