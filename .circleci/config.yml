@@ -79,7 +79,7 @@ jobs:
 
   deploy-infra:
     <<: *aws-docker-image
-    working_directory: ~/.circleci/files
+    working_directory: ~/
     steps:
       - checkout
       - run:
