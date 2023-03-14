@@ -10,7 +10,7 @@
   
 - name: "Add Docker Repo"
   apt_repository:
-    repo: deb https://download.docker.com/linux/ubuntu jammy stable
+    repo: deb https://download.docker.com/linux/ubuntu focal stable
     state: present
 
 
@@ -24,6 +24,7 @@
   apt: 
     name: [docker-ce-cli, containerd.io]
     state: latest
+
 - name: Install Docker Module for Python
   pip:
     name: docker
