@@ -4,14 +4,30 @@
 #
 version: 2.1
 
+tf-docker-image: &tf-docker-image
+   docker:
+      - image: circleci/terraform@3.2.0
+
+node-docker-image: &node-docker-image
+   docker:
+      - image: circleci/node:13.8.0
+
+aws-docker-image: &aws-docker-image
+   docker:
+      - image: cimg/aws:2023.01
+
+ansible-docker-image: &ansible-docker-image
+   docker:
+      - image: cimg/deploy:2022.11.1
+
+python-docker-image: &python-docker-image
+   docker:
+      - image: python3.7.3-stretch
+
 jobs:
   build-out:
-    docker:
-      # Use the same Docker base as the project
-      - image: python:3.7.3-stretch
-
+    <<: *python-docker-image
     working_directory: ~/repo
-
     steps:
       - checkout
       #  Download and cache dependencies
