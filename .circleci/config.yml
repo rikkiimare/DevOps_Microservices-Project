@@ -69,6 +69,7 @@ jobs:
       - run:
           name: terraform init
           command: |
+            cd .circleci/files
             terraform init -input=false
       # - terraform/init:
       #     path: .
