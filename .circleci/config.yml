@@ -107,6 +107,25 @@ jobs:
           paths:
             - .
 
+  terraform-plan:
+    <<: *python-docker-image
+    steps:
+      - checkout
+      - attach_workspace: ~/
+      - *tf-install
+      - restore_cache:
+          keys:
+            - terra-dependencies-{{ checksum ".circleci/files/main.tf" }}
+      - run:
+          name: plan
+          command: |
+            cd .circleci/files
+            terraform plan -out=plan.tfplan -input=false
+      - persist_to_workspace:
+          root: ~/
+          paths:
+            - .
+
   deploy-infra:
     <<: *aws-docker-image
     steps:
