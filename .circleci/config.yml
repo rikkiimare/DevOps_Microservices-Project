@@ -41,7 +41,7 @@ ansible-docker-image: &ansible-docker-image
       - image: cimg/deploy:2022.11.1
 
 python-docker-image: &python-docker-image
-   docker:
+    docker:
       - image: python:3.7.3-stretch
     working_directory: ~/project
     environment:
