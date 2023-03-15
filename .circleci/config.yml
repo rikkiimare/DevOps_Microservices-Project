@@ -77,19 +77,35 @@ jobs:
             . venv/bin/activate
             make lint 
 
+  tf-deploy-eks:
+    <<: *tf-docker-image
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - terra-dependencies-{{ checksum ".circleci/files/main.tf" }}
+      - run:  apk add --update tar gzip
+      - run: pwd
+      - terraform/init:
+          path: .circleci/files    
+      - terraform/validate:
+          path: .circleci/files
+      - terraform/fmt:
+          path: .circleci/files        
+  
   deploy-infra:
     <<: *aws-docker-image
     steps:
       - checkout
       - run:
-          name: terraform init
+          name: cloudformation ec2 deploy
           command: |
             aws cloudformation deploy \
               --template-file .circleci/files/backend.yml \
               --tags project=udapeople \
               --stack-name "udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7}" \
               --parameter-overrides ID="${CIRCLE_WORKFLOW_ID:0:7}" \
-              --region us-east-1
+              --region us-east-2
       - run:
           name: Add back-end ip to ansible inventory
           command: |
@@ -97,7 +113,7 @@ jobs:
             aws ec2 describe-instances \
               --filters "Name=tag:Name,Values=backend-${CIRCLE_WORKFLOW_ID:0:7}" \
               --query "Reservations[*].Instances[*].PublicDnsName" \
-              --region us-east-1 \
+              --region us-east-2 \
               --output text >> .circleci/ansible/inventory.txt
             echo `cat .circleci/ansible/inventory.txt`
       - persist_to_workspace:
@@ -136,9 +152,12 @@ workflows:
   build-and-test:
     jobs:
       - build-out
-      - deploy-infra:
+      - tf-deploy-eks:
           requires:
             - build-out
+      - deploy-infra:
+          requires:
+            - tf-deploy-eks
       - configure-infrastructure:
           requires:
             - deploy-infra

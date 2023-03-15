@@ -1,0 +1,3 @@
+.circleci/files/.terraform/
+.circleci/files/.terraform.lock.hcl
+.DS_Store
