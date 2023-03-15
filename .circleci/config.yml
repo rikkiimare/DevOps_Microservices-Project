@@ -181,7 +181,7 @@ workflows:
             - build-out
       - deploy-infra:
           requires:
-            - build-out
+            - terraform-deploy
       - configure-infrastructure:
           requires:
             - deploy-infra
