@@ -109,9 +109,7 @@ jobs:
           command: |
             cd .circleci/files
             terraform plan -out=plan.tfplan -input=false -compact-warnings \
-              -var='ID=${CIRCLE_WORKFLOW_ID:0:7}' \
-              -var='TF_VAR_AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}' \
-              -var='TF_VAR_AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY_ID}' 
+              -var='ID=${CIRCLE_WORKFLOW_ID:0:7}' 
       - persist_to_workspace:
           root: ~/
           paths:
