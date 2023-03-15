@@ -89,25 +89,7 @@ jobs:
             . venv/bin/activate
             make lint 
 
-  terraform-init:
-    <<: *python-docker-image
-    steps:
-      - checkout
-      - *tf-install
-      - restore_cache:
-          keys:
-            - terra-dependencies-{{ checksum ".circleci/files/main.tf" }}
-      - run:
-          name: init
-          command: |
-            cd .circleci/files
-            terraform init -input=false
-      - persist_to_workspace:
-          root: ~/
-          paths:
-            - .
-
-  terraform-plan:
+  terraform-deploy:
     <<: *python-docker-image
     steps:
       - checkout
@@ -117,6 +99,11 @@ jobs:
       - restore_cache:
           keys:
             - terra-dependencies-{{ checksum ".circleci/files/main.tf" }}
+      - run:
+          name: init
+          command: |
+            cd .circleci/files
+            terraform init -input=false
       - run:
           name: plan
           command: |
@@ -142,7 +129,7 @@ jobs:
               --tags project=udapeople \
               --stack-name "udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7}" \
               --parameter-overrides ID="${CIRCLE_WORKFLOW_ID:0:7}" \
-              --region us-east-2
+              --region us-east-1
       - run:
           name: Add back-end ip to ansible inventory
           command: |
@@ -150,7 +137,7 @@ jobs:
             aws ec2 describe-instances \
               --filters "Name=tag:Name,Values=backend-${CIRCLE_WORKFLOW_ID:0:7}" \
               --query "Reservations[*].Instances[*].PublicDnsName" \
-              --region us-east-2 \
+              --region us-east-1 \
               --output text >> .circleci/ansible/inventory.txt
             echo `cat .circleci/ansible/inventory.txt`
       - persist_to_workspace:
@@ -189,10 +176,7 @@ workflows:
   build-and-test:
     jobs:
       - build-out
-      - terraform-init:
-          requires:
-            - build-out
-      - terraform-plan:
+      - terraform-deploy:
           requires:
             - build-out
       - deploy-infra:
