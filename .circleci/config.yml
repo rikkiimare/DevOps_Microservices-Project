@@ -19,8 +19,9 @@ commands:
           when: on_fail
           command: |
             echo "Destroying environments: << parameters.workflow_id >>"
+            terraform destroy -auto-approve
             # aws s3 rm s3://udapeople-<< parameters.workflow_id >> --recursive --region us-east-1
-            aws cloudformation delete-stack --stack-name udapeople-backend-<< parameters.workflow_id >> --region us-east-1
+            # aws cloudformation delete-stack --stack-name udapeople-backend-<< parameters.workflow_id >> --region us-east-1
             # aws cloudformation delete-stack --stack-name udapeople-frontend-<< parameters.workflow_id >> --region us-east-1
 
 tf-docker-image: &tf-docker-image
@@ -114,12 +115,15 @@ jobs:
           name: apply
           command: |
             cd .circleci/files
-            terraform apply  -auto-approve -input=false -compact-warnings plan.tfplan \
-              -var='ID=${CIRCLE_WORKFLOW_ID:0:7}' 
+            # Uncomment the line below to allow CircleCI to apply the Terraform
+            # terraform apply  -auto-approve -input=false -compact-warnings plan.tfplan -var='ID=${CIRCLE_WORKFLOW_ID:0:7}' 
+            echo Uncomment line 120 of config.yml to let CircleCI apply the Terraform
       - persist_to_workspace:
           root: ~/
           paths:
             - .
+      - destroy-environment:
+          workflow_id: ${CIRCLE_WORKFLOW_ID:0:7}
 
   deploy-infra:
     <<: *aws-docker-image
