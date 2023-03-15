@@ -111,7 +111,8 @@ jobs:
     <<: *python-docker-image
     steps:
       - checkout
-      - attach_workspace: ~/
+      - attach_workspace:
+          at: ~/
       - *tf-install
       - restore_cache:
           keys:
