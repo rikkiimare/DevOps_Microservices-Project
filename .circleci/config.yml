@@ -110,6 +110,12 @@ jobs:
             cd .circleci/files
             terraform plan -out=plan.tfplan -input=false -compact-warnings \
               -var='ID=${CIRCLE_WORKFLOW_ID:0:7}' 
+      - run:
+          name: apply
+          command: |
+            cd .circleci/files
+            terraform apply  -auto-approve -input=false -compact-warnings plan.tfplan \
+              -var='ID=${CIRCLE_WORKFLOW_ID:0:7}' 
       - persist_to_workspace:
           root: ~/
           paths:
@@ -119,15 +125,15 @@ jobs:
     <<: *aws-docker-image
     steps:
       - checkout
-      - run:
-          name: cloudformation ec2 deploy
-          command: |
-            aws cloudformation deploy \
-              --template-file .circleci/files/backend.yml \
-              --tags project=udapeople \
-              --stack-name "udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7}" \
-              --parameter-overrides ID="${CIRCLE_WORKFLOW_ID:0:7}" \
-              --region us-east-1
+      # - run:
+      #     name: cloudformation ec2 deploy
+      #     command: |
+      #       aws cloudformation deploy \
+      #         --template-file .circleci/files/backend.yml \
+      #         --tags project=udapeople \
+      #         --stack-name "udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7}" \
+      #         --parameter-overrides ID="${CIRCLE_WORKFLOW_ID:0:7}" \
+      #         --region us-east-1
       - run:
           name: Add back-end ip to ansible inventory
           command: |

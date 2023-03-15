@@ -1,52 +1,25 @@
-terraform {
-  required_providers {
-    aws = {
-      source  = "hashicorp/aws"
-      version = "4.22.0"
-    }
-  }
-}
+locals {
+  account_id = data.aws_caller_identity.current.account_id
 
-provider "aws" {
-  region     = "us-east-1"
-#  access_key = var.TF_VAR_AWS_ACCESS_KEY_ID
-#  secret_key = var.TF_VAR_AWS_SECRET_ACCESS_KEY
-}
-
-resource "aws_security_group" "my_sec_group" {
-  ingress {
-    cidr_blocks = ["0.0.0.0/0"]
-    description = "accept ssh rule"
-    from_port   = 22
-    protocol    = "tcp"
-    to_port     = 22
-  }
-  egress {
-    cidr_blocks = ["0.0.0.0/0"]
-    description = "Allow all outgoing"
-    from_port   = 0
-    to_port     = 0
-    protocol    = "-1"
-  }
+  name   = "udacity"
+  region = "us-east-1"
   tags = {
-    "Name" = "${var.ID}-Microservice"
+    Name      = local.name
+    Terraform = "true"
   }
 }
 
-resource "aws_instance" "TestInstance" {
-  ami                         = "ami-005f9685cb30f234b"
-  instance_type               = "t2.micro"
-  vpc_security_group_ids      = [aws_security_group.my_sec_group.id]
-  associate_public_ip_address = true
-  key_name                    = "eks"
-  tags = {
-    "Name" = "$RI-Microservice"
-  }
-  #   provisioner "local-exec" {
-  #     command = "echo ${self.public_ip} >> ~/. circleci/ansible/ inventory. txt"
-  #   }
-}
+module "vpc" {
+  source     = "./modules/vpc"
+  cidr_block = "10.100.0.0/16"
 
-output "TestInstance-ip" {
-  value = aws_instance.TestInstance.public_ip
+  account_owner = local.name
+  name          = "${local.name}-project"
+  azs           = ["us-east-1a", "us-east-1b"]
+  private_subnet_tags = {
+    "kubernetes.io/role/internal-elb" = 1
+  }
+  public_subnet_tags = {
+    "kubernetes.io/role/elb" = 1
+  }
 }
