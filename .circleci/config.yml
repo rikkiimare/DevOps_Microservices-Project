@@ -104,7 +104,7 @@ jobs:
             terraform init -input=false
       - persist_to_workspace:
           root: ~/
-           paths:
+          paths:
             - .
 
   deploy-infra:
