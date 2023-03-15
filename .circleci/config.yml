@@ -188,9 +188,12 @@ workflows:
       - terraform-init:
           requires:
             - build-out
+      - terraform-plan:
+          requires:
+            - build-out
       - deploy-infra:
           requires:
-            - terraform-init
+            - build-out
       - configure-infrastructure:
           requires:
             - deploy-infra
