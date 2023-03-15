@@ -166,12 +166,12 @@ workflows:
   build-and-test:
     jobs:
       - build-out
-      - tf-deploy-eks:
+      - terraform-init:
           requires:
             - build-out
       - deploy-infra:
           requires:
-            - tf-deploy-eks
+            - terraform-init
       - configure-infrastructure:
           requires:
             - deploy-infra
