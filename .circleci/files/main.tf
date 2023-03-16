@@ -12,7 +12,7 @@ provider "aws" {
 }
 
 resource "aws_security_group" "configure_access" {
-  name        = "configure-access-${ID}"
+  name        = "configure-access-${var.ID}"
   description = "Allow SSH inbound traffic"
   #vpc_id      = module.vpc.vpc_id
 
@@ -90,7 +90,7 @@ module "ec2_instance" {
   source  = "terraform-aws-modules/ec2-instance/aws"
   version = "~> 3.0"
 
-  name = "curl-instance-${ID}"
+  name = "curl-instance-${var.ID}"
 
   #ami                    = data.aws_ami.canonical_ubuntu.id
   ami                    = "ami-0557a15b87f6559cf"
