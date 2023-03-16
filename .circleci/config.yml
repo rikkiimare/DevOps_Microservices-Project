@@ -124,19 +124,10 @@ jobs:
       - destroy-environment:
           workflow_id: ${CIRCLE_WORKFLOW_ID:0:7}
 
-  deploy-infra:
+  assign-ec2-ip:
     <<: *aws-docker-image
     steps:
       - checkout
-      # - run:
-      #     name: cloudformation ec2 deploy
-      #     command: |
-      #       aws cloudformation deploy \
-      #         --template-file .circleci/files/backend.yml \
-      #         --tags project=udapeople \
-      #         --stack-name "udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7}" \
-      #         --parameter-overrides ID="${CIRCLE_WORKFLOW_ID:0:7}" \
-      #         --region us-east-1
       - run:
           name: Add back-end ip to ansible inventory
           command: |
@@ -151,8 +142,6 @@ jobs:
           root: ~/
           paths:
             - project/.circleci/ansible/inventory.txt
-      - destroy-environment:
-          workflow_id: ${CIRCLE_WORKFLOW_ID:0:7}
 
   configure-infrastructure:
     <<: *ansible-docker-image
@@ -186,9 +175,9 @@ workflows:
       - terraform-deploy:
           requires:
             - build-out
-      - deploy-infra:
+      - assign-ec2-ip:
           requires:
             - terraform-deploy
       - configure-infrastructure:
           requires:
-            - deploy-infra
+            - assign-ec2-ip

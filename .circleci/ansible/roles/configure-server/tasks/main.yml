@@ -28,3 +28,15 @@
 - name: Install Docker Module for Python
   pip:
     name: docker
+
+- name: change docker file mode
+  become: true
+  become_method: sudo
+  become_user: root 
+  command: chmod 744 /var/run/docker.sock 
+
+- name: Start Docker service
+  systemd: 
+    name: docker
+    enabled: yes
+    state: restarted 
