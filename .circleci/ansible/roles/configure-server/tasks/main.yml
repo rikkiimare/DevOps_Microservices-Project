@@ -58,4 +58,9 @@
   command: mv minikube-linux-amd64 /usr/local/bin/minikube
 
 - name: Comfirm install of Minikube
-  command: ./minikube version
+  command: ./minikube-linux-amd64 version
+
+- name: Download kubectl
+  ansible.builtin.get_url:
+    url: https://storage.googleapis.com/kubernetes-release/release/`curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt`/bin/linux/amd64/kubectl
+    dest: ~/kubectl
