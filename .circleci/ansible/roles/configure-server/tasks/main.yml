@@ -75,3 +75,8 @@
   become_method: sudo
   become_user: root
   command: mv ~/kubectl /usr/local/bin/kubectl
+
+- name: minikube start
+  become: true
+  become_method: sudo
+  command: minikube start
