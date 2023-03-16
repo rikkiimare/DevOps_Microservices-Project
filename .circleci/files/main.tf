@@ -82,7 +82,7 @@ resource "aws_security_group" "configure_access" {
   ]
 
   tags = {
-    Name = "${var.ID}-port_access"
+    "Name" = "${var.ID}-port-access"
   }
 }
 
