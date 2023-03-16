@@ -43,10 +43,16 @@
 
 - name: Download minikube
   ansible.builtin.get_url:
-    url: wget https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64
+    url: https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64
     dest: ~/minikube-linux-amd64
 
 - name: change permissions minikube
   ansible.builtin.file:
     path: ~/minikube-linux-amd64
     mode: 744
+
+- name: Move minikube file
+  become: true
+  become_method: sudo
+  become_user: root
+  command: mv minikube-linux-amd64 /usr/local/bin/minikube
