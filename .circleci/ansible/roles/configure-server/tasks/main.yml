@@ -58,7 +58,7 @@
   command: mv minikube-linux-amd64 /usr/local/bin/minikube
 
 - name: Comfirm install of Minikube
-  command: ./minikube-linux-amd64 version
+  command: minikube version
 
 - name: Download kubectl
   ansible.builtin.get_url:
