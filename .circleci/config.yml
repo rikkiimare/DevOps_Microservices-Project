@@ -109,13 +109,14 @@ jobs:
           name: plan
           command: |
             cd .circleci/files
-            terraform plan -out=plan.tfplan -input=false -compact-warnings 
+            terraform plan -out=plan.tfplan -input=false -compact-warnings \
+              -var='ID=${CIRCLE_WORKFLOW_ID:0:7}'
       - run:
           name: apply
           command: |
             cd .circleci/files
             # Uncomment the line below to allow CircleCI to apply the Terraform
-            # terraform apply  -auto-approve -input=false -compact-warnings plan.tfplan 
+            terraform apply  -auto-approve -input=false -compact-warnings plan.tfplan -var='ID=${CIRCLE_WORKFLOW_ID:0:7}'
             echo Uncomment line 120 of config.yml to let CircleCI apply the Terraform
       - persist_to_workspace:
           root: ~/
@@ -133,7 +134,7 @@ jobs:
           command: |
             # Query EC2 instances in the backend using the workflowID and export the IP address to ansible/inventory
             aws ec2 describe-instances \
-              --filters "Name=tag:Name,Values=curl-instance" \
+              --filters "Name=tag:Name,Values=curl-instance-${CIRCLE_WORKFLOW_ID:0:7}" \
               --query "Reservations[*].Instances[*].PublicDnsName" \
               --region us-east-1 \
               --output text >> .circleci/ansible/inventory.txt
