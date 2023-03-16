@@ -76,4 +76,4 @@
 - name: minikube start
   become: true
   become_method: sudo
-  command: minikube start
+  command: minikube start --force
