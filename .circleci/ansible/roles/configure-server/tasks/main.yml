@@ -32,7 +32,6 @@
 - name: change docker file mode
   become: true
   become_method: sudo
-  become_user: root 
   command: chmod 744 /var/run/docker.sock 
 
 - name: Start Docker service
@@ -54,7 +53,6 @@
 - name: Move minikube file
   become: true
   become_method: sudo
-  become_user: root
   command: mv ~/minikube-linux-amd64 /usr/local/bin/minikube
 
 - name: Comfirm install of Minikube
