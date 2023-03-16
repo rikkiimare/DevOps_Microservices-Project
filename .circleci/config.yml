@@ -110,7 +110,7 @@ jobs:
           command: |
             cd .circleci/files
             terraform plan -out=plan.tfplan -input=false -compact-warnings \
-              -var='ID=${CIRCLE_WORKFLOW_ID:0:7}'
+              -var ID=${CIRCLE_WORKFLOW_ID:0:7}
       - run:
           name: apply
           command: |
