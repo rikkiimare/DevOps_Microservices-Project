@@ -71,7 +71,6 @@
 - name: Move kubectl file
   become: true
   become_method: sudo
-  become_user: root
   command: mv ~/kubectl /usr/local/bin/kubectl
 
 - name: minikube start
