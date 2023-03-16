@@ -55,7 +55,7 @@
   become: true
   become_method: sudo
   become_user: root
-  command: mv minikube-linux-amd64 /usr/local/bin/minikube
+  command: mv ~/minikube-linux-amd64 /usr/local/bin/minikube
 
 - name: Comfirm install of Minikube
   command: minikube version
