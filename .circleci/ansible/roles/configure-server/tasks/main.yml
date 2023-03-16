@@ -40,3 +40,13 @@
     name: docker
     enabled: yes
     state: restarted 
+
+- name: Download minikube
+  ansible.builtin.get_url:
+    url: wget https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64
+    dest: ~/minikube-linux-amd64
+
+- name: change permissions minikube
+  ansible.builtin.file:
+    path: ~/minikube-linux-amd64
+    mode: 744
