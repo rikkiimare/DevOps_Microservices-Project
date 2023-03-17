@@ -169,6 +169,30 @@ jobs:
           paths:
             - project/.circleci/ansible/.env            
 
+  deploy-infrastructure:
+    <<: *ansible-docker-image
+    steps:
+      - checkout
+      - add_ssh_keys:
+          fingerprints: 
+            - "df:d4:27:43:6f:dc:01:ea:99:ec:ab:03:34:a3:60:38"
+      - attach_workspace:      # attach workspace!
+          at: ~/
+      - run:
+          name: Configure server
+          command: |
+            cd .circleci/ansible/
+            echo DOCKERHUB_USER=${DOCKERHUB_USER} >> ".env"
+            echo DOCKERHUB_PASSWORD=${DOCKERHUB_PASSWORD} >> ".env"
+            cat .env
+            pwd
+            ls
+            echo `cat inventory.txt`
+            ansible-playbook -i inventory.txt deploy.yml
+      - persist_to_workspace:
+          root: ~/
+          paths:
+            - project/.circleci/ansible/.env        
 workflows:
   build-and-test:
     jobs:
@@ -182,3 +206,6 @@ workflows:
       - configure-infrastructure:
           requires:
             - assign-ec2-ip
+      - deploy-infrastructure:
+          requires:
+            - configure-infrastructure
