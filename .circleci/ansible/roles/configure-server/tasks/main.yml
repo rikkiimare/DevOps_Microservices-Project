@@ -81,8 +81,4 @@
 - name: Install aws cli
   become: true
   become_method: sudo
-  shell: |
-    curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
-    unzip awscliv2.zip
-    sudo ./aws/install
-    aws --version
+  command: apt install -y awscli
