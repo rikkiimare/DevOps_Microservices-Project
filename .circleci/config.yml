@@ -182,6 +182,8 @@ jobs:
           name: Configure server
           command: |
             cd .circleci/ansible/
+            echo AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID} >> ".env"
+            echo AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY} >> ".env"
             echo DOCKERHUB_USER=${DOCKERHUB_USER} >> ".env"
             echo DOCKERHUB_PASSWORD=${DOCKERHUB_PASSWORD} >> ".env"
             cat .env

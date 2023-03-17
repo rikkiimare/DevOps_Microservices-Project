@@ -15,13 +15,23 @@
     dest: "{{ item.dest }}"
   with_items: 
     - { src: "~/project/Dockerfile", dest: "./Dockerfile" }
-    - { src: "~/project/.dockerignore", dest: "./.dockerignore" }
     - { src: "~/project/run_docker.sh", dest: "./run_docker.sh" }
     - { src: "~/project/run_kubernetes.sh", dest: "./run_kubernetes.sh" }
     - { src: "~/project/upload_docker.sh", dest: "./upload_docker.sh" }
     - { src: "~/project/green-ansible.yml", dest: "./green-ansible.yml" }
   tags:
     - req files
+
+- name: aws configuration changes
+  become: true
+  become_method: sudo
+  command: |
+    aws configure set aws_access_key_id $AWS_ACCESS_KEY_ID --profile udacity
+    aws configure set aws_secret_access_key $AWS_SECRET_ACCESS_KEY --profile udacity
+    aws configure set region us-east-1 --profile udacity
+    export AWS_CONFIG_FILE=~/.aws/config
+    export AWS_SHARED_CREDENTIALS_FILE=~/.aws/credentials
+    export AWS_PROFILE=udacity
 
 # - name: configure the context
 #   kubernetes.core.kubectl:
