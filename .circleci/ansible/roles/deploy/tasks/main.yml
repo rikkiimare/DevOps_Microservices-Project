@@ -23,9 +23,7 @@
     - req files
 
 - name: aws configuration changes
-  become: true
-  become_method: sudo
-  command: |
+  shell: |
     aws configure set aws_access_key_id $AWS_ACCESS_KEY_ID --profile udacity
     aws configure set aws_secret_access_key $AWS_SECRET_ACCESS_KEY --profile udacity
     aws configure set region us-east-1 --profile udacity
