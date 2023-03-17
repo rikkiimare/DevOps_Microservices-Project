@@ -6,7 +6,7 @@
 # Step 1:
 # Create dockerpath
 # dockerpath=<your docker ID/path>
-dockerpath="riccardopixel/udacity-build-app:v1"
+dockerpath="riccardopixel/nginx"
 
 # Step 2:  
 # Authenticate & tag

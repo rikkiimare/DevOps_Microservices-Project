@@ -1,0 +1,27 @@
+---
+
+- name: Copy files
+  copy:
+    src: "{{ item }}"
+    dest: ./site-content/
+  with_fileglob:
+    - "~/project/site-content/*"
+  tags:
+    - site-content
+
+- name: copy other files
+  copy:
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+  with_items: 
+    - { src: "~/project/Dockerfile", dest: "./Dockerfile" }
+    - { src: "~/project/.dockerignore", dest: "./.dockerignore" }
+    - { src: "~/project/run_docker.sh", dest: "./run_docker.sh" }
+    - { src: "~/project/run_kubernetes.sh", dest: "./run_kubernetes.sh" }
+    - { src: "~/project/upload_docker.sh", dest: "./upload_docker.sh" }
+    - { src: "~/project/green-ansible.yml", dest: "./green-ansible.yml" }
+  tags:
+    - req files
+
+# - name: configure the context
+#   kubernetes.core.kubectl:

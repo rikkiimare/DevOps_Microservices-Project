@@ -13,6 +13,7 @@ provider "aws" {
 
 resource "aws_security_group" "configure_access" {
   name        = "configure-access-${var.ID}"
+  #name        = "configure-access"
   description = "Allow port inbound traffic"
   #vpc_id      = module.vpc.vpc_id
 
@@ -82,7 +83,7 @@ resource "aws_security_group" "configure_access" {
   ]
 
   tags = {
-    "Name" = "${var.ID}-port-access"
+    "Name" = "curl-SG-${var.ID}"
   }
 }
 
