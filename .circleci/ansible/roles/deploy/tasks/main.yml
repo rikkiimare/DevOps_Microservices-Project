@@ -22,17 +22,38 @@
   tags:
     - req files
 
-- name: aws configure changes
-  shell: |
-    aws configure set aws_access_key_id {{ lookup('env', 'AWS_ACCESS_KEY_ID')}} --profile udacity
-    aws configure set aws_secret_access_key {{ lookup('env', 'AWS_SECRET_ACCESS_KEY')}} --profile udacity
-    aws configure set region us-east-1 --profile udacity
+# - name: aws configure changes
+#   shell: |
+#     aws configure set aws_access_key_id {{ lookup('env', 'AWS_ACCESS_KEY_ID')}} --profile udacity
+#     aws configure set aws_secret_access_key {{ lookup('env', 'AWS_SECRET_ACCESS_KEY')}} --profile udacity
+#     aws configure set region us-east-1 --profile udacity
 
-- name: aws eks connect
-  shell: |
-    export AWS_CONFIG_FILE=~/.aws/config
-    export AWS_SHARED_CREDENTIALS_FILE=~/.aws/credentials
-    export AWS_PROFILE=udacity
-    aws s3 ls
-# - name: configure the context
-#   kubernetes.core.kubectl:
+# - name: aws eks connect
+#   shell: |
+#     export AWS_CONFIG_FILE=~/.aws/config
+#     export AWS_SHARED_CREDENTIALS_FILE=~/.aws/credentials
+#     export AWS_PROFILE=udacity
+#     aws s3 ls
+
+- name: Build docker image 
+  docker_image:
+    build:
+      path: .
+      pull: no
+    name: riccardopixel/nginx
+    tag: "{{ image_tag }}"
+    source: build
+  tags:
+    - build
+
+- name: Start docker container
+  docker_container:
+    name: nginx-docker
+    image: riccardopixel/nginx:{{ image_tag }}
+    ports:
+     - "8000:80"
+    detach: yes
+    state: started
+  tags:
+    - start
+
