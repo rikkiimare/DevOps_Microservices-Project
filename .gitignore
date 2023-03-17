@@ -1,3 +1,9 @@
 .circleci/files/.terraform/
 .circleci/files/.terraform.lock.hcl
 .DS_Store
+.circleci/files/plan.tfplan
+.circleci/files/terraform.tfstate
+.circleci/files/terraform.tfstate.backup
+hadolint
+terraform.tfstate
+terraform/

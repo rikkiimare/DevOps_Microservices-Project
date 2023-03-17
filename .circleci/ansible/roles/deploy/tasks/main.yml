@@ -25,11 +25,15 @@
 - name: aws configure changes
   shell: |
     aws configure set aws_access_key_id {{ lookup('env', 'AWS_ACCESS_KEY_ID')}} --profile udacity
-    aws configure set aws_secret_access_key {{ lookup('env', '$AWS_SECRET_ACCESS_KEY')}} --profile udacity
+    aws configure set aws_secret_access_key {{ lookup('env', 'AWS_SECRET_ACCESS_KEY')}} --profile udacity
     aws configure set region us-east-1 --profile udacity
     export AWS_CONFIG_FILE=~/.aws/config
     export AWS_SHARED_CREDENTIALS_FILE=~/.aws/credentials
     export AWS_PROFILE=udacity
 
+
+- name: aws configure changes
+  shell: |
+    aws s3 ls
 # - name: configure the context
 #   kubernetes.core.kubectl:
