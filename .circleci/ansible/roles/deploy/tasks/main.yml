@@ -70,9 +70,15 @@
 - name: Set dockerpath and run docker hub container
   shell: |
     dockerpath="nginx"
-    kubectl run green-svc --image=$dockerpath --port=80 --replicas=3 --namespace udacity
+    kubectl run green-svc --image=$dockerpath --port=80 --namespace udacity  --labels app=green-svc
 
-# Push docker image up???
+# Push docker image up
+- name: Push docker image up to Hub
+  shell: |
+    dockerpath="riccardopixel/nginx"
+    echo "Docker ID and Image: $dockerpath"
+    docker login -u="{{ lookup('env', 'DOCKERHUB_USER')}}" -p="{{ lookup('env', 'DOCKERHUB_PASSWORD')}}"
+    docker push $dockerpath
 # docker login -u="${DOCKER_USERNAME}" -p="${DOCKER_PASSWORD}"
 
 
