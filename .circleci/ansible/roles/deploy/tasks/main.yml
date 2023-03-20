@@ -73,6 +73,7 @@
     kubectl run green-svc --image=$dockerpath --port=80 --replicas=3 --namespace udacity
 
 # Push docker image up???
+# docker login -u="${DOCKER_USERNAME}" -p="${DOCKER_PASSWORD}"
 
 
 
