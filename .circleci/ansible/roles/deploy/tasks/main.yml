@@ -32,11 +32,11 @@
   shell: |
     export AWS_CONFIG_FILE=~/.aws/config
     export AWS_SHARED_CREDENTIALS_FILE=~/.aws/credentials
-    export AWS_PROFILE=udacity
-    aws eks --region us-east-1 update-kubeconfig --name udacity-cluster
-    kubectl config use-context arn:aws:eks:us-east-1:617136264054:cluster/udacity-cluster
-    kubectl config set-context --current --namespace udacity
-    kubectl get pods -n udacity
+    export AWS_PROFILE=circleci
+    AWS_PROFILE=circleci aws eks --region us-east-1 update-kubeconfig --name udacity-cluster
+    # kubectl config use-context arn:aws:eks:us-east-1:617136264054:cluster/udacity-cluster
+    # kubectl config set-context --current --namespace udacity
+    # kubectl get pods -n udacity
 
 
 
