@@ -39,7 +39,18 @@
   shell: |
     kubectl config use-context arn:aws:eks:us-east-1:617136264054:cluster/udacity-cluster
     kubectl config set-context --current --namespace udacity
-    kubectl get pods -n udacity
+
+- name: Run docker build
+  command: docker build . -t riccardopixel/nginx
+
+- name: Build out Green-Svc
+  shell: |
+    dockerpath="nginx"
+    kubectl run green-svc --image=$dockerpath --port=80 --namespace udacity --labels app=green-svc
+
+- name: Port Forward green-svc
+  command: kubectl port-forward pods/green-svc 8000:80
+
 
 
 
