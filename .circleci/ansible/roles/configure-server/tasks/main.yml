@@ -40,45 +40,45 @@
     enabled: yes
     state: restarted 
 
-# - name: Download minikube
-#   ansible.builtin.get_url:
-#     url: https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64
-#     dest: ~/minikube-linux-amd64
+- name: Download minikube
+  ansible.builtin.get_url:
+    url: https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64
+    dest: ~/minikube-linux-amd64
 
-# - name: change permissions minikube
-#   ansible.builtin.file:
-#     path: ~/minikube-linux-amd64
-#     mode: 744
+- name: change permissions minikube
+  ansible.builtin.file:
+    path: ~/minikube-linux-amd64
+    mode: 744
 
-# - name: Move minikube file
-#   become: true
-#   become_method: sudo
-#   command: mv ~/minikube-linux-amd64 /usr/local/bin/minikube
+- name: Move minikube file
+  become: true
+  become_method: sudo
+  command: mv ~/minikube-linux-amd64 /usr/local/bin/minikube
 
-# - name: Comfirm install of Minikube
-#   command: minikube version
+- name: Comfirm install of Minikube
+  command: minikube version
 
-# - name: Download kubectl
-#   ansible.builtin.get_url:
-#     url: https://storage.googleapis.com/kubernetes-release/release/v1.26.2/bin/linux/amd64/kubectl
-#     dest: ~/kubectl
+- name: Download kubectl
+  ansible.builtin.get_url:
+    url: https://storage.googleapis.com/kubernetes-release/release/v1.26.2/bin/linux/amd64/kubectl
+    dest: ~/kubectl
 
-# - name: change permissions kubectl
-#   ansible.builtin.file:
-#     path: ~/kubectl
-#     mode: 744
+- name: change permissions kubectl
+  ansible.builtin.file:
+    path: ~/kubectl
+    mode: 744
 
-# - name: Move kubectl file
-#   become: true
-#   become_method: sudo
-#   command: mv ~/kubectl /usr/local/bin/kubectl
+- name: Move kubectl file
+  become: true
+  become_method: sudo
+  command: mv ~/kubectl /usr/local/bin/kubectl
 
-# - name: minikube start
-#   become: true
-#   become_method: sudo
-#   command: minikube start --force
+- name: minikube start
+  become: true
+  become_method: sudo
+  command: minikube start --force
 
-# - name: Install aws cli
-#   become: true
-#   become_method: sudo
-#   command: apt install -y awscli
+- name: Install aws cli
+  become: true
+  become_method: sudo
+  command: apt install -y awscli
