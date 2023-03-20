@@ -2,22 +2,36 @@
 
 ## Project Overview
 
-In this project, you will apply the skills you have acquired in this course to operationalize a Machine Learning Microservice API. 
+Capstone Project Overview
+In this project you will apply the skills and knowledge which were developed throughout the Cloud DevOps Nanodegree program. These include:
 
-You are given a pre-trained, `sklearn` model that has been trained to predict housing prices in Boston according to several features, such as average rooms in a home and data about highway access, teacher-to-pupil ratios, and so on. You can read more about the data, which was initially taken from Kaggle, on [the data source site](https://www.kaggle.com/c/boston-housing). This project tests your ability to operationalize a Python flask app—in a provided file, `app.py`—that serves out predictions (inference) about housing prices through API calls. This project could be extended to any pre-trained machine learning model, such as those for image recognition and data labeling.
+Working in AWS
+Using Jenkins or Circle CI to implement Continuous Integration and Continuous Deployment
+Building pipelines
+Working with Ansible and CloudFormation to deploy clusters
+Building Kubernetes clusters
+Building Docker containers in pipelines
+As a capstone project, the directions are rather more open-ended than they were in the previous projects in the program. You will also be able to make some of your own choices in this capstone, for the type of deployment you implement, which services you will use, and the nature of the application you develop.
+
+You will develop a CI/CD pipeline for micro services applications with either blue/green deployment or rolling deployment. You will also develop your Continuous Integration steps as you see fit, but must at least include typographical checking (aka “linting”). To make your project stand out, you may also choose to implement other checks such as security scanning, performance testing, integration testing, etc.!
+
+Once you have completed your Continuous Integration you will set up Continuous Deployment, which will include:
+
+Pushing the built Docker container(s) to the Docker repository (you can use AWS ECR, create your own custom Registry within your cluster, or another 3rd party Docker repository) ; and
+Deploying these Docker container(s) to a small Kubernetes cluster. For your Kubernetes cluster you can either use AWS Kubernetes as a Service, or build your own Kubernetes cluster. To deploy your Kubernetes cluster, use either Ansible or Cloudformation. Preferably, run these from within Jenkins or Circle CI as an independent pipeline.
 
 ### Project Tasks
 
 Your project goal is to operationalize this working, machine learning microservice using [kubernetes](https://kubernetes.io/), which is an open-source system for automating the management of containerized applications. In this project you will:
-* Test your project code using linting
-* Complete a Dockerfile to containerize this application
-* Deploy your containerized application using Docker and make a prediction
+* Propose and Scope the Project
+* Use Jenkins or Circle CI, and implement blue/green or rolling deployment
+* Pick AWS Kubernetes as a Service, or build your own Kubernetes cluster
 * Improve the log statements in the source code for this application
-* Configure Kubernetes and create a Kubernetes cluster
-* Deploy a container using Kubernetes and make a prediction
-* Upload a complete Github repo with CircleCI to indicate that your code has been tested
+* Build your pipeline
+* Test your pipeline
 
-You can find a detailed [project rubric, here](https://review.udacity.com/#!/rubrics/2576/view).
+
+You can find a detailed [project rubric, here](https://review.udacity.com/#!/rubrics/5068/view).
 
 **The final implementation of the project will showcase your abilities to operationalize production microservices.**
 
@@ -25,95 +39,28 @@ You can find a detailed [project rubric, here](https://review.udacity.com/#!/rub
 
 ## Setup the Environment
 
-* Create a virtualenv with Python 3.7 and activate it. Refer to this link for help on specifying the Python version in the virtualenv. 
-```bash
-python3 -m pip install --user virtualenv
-# You should have Python 3.7 available in your host. 
-# Check the Python path using `which python3`
-# Use a command similar to this one:
-python3 -m virtualenv --python=<path-to-Python3.7> .devops
-source .devops/bin/activate
-```
-* Run `make install` to install the necessary dependencies
+* Existing AWS EKS cluster called udacity-cluster is already running with a blue-svc deployed emulating a live service.
 
-### Running `app.py`
+### Green deployment
 
-1. Standalone:  `python app.py`
-2. Run in Docker:  `./run_docker.sh`
-3. Run in Kubernetes:  `./run_kubernetes.sh`
+Green deployment is mocked in the event of a repo push to github.
 
-### Kubernetes Steps
+* Steps involved with circleci build out.
+ * build-out
+      Installs dependancies
+      Performs a lint test on the Dockerfile with hadolint
 
-* Setup and Configure Docker locally
- * Use the following link to find instructions to install [Docker](https://docs.docker.com/engine/install/)
+ * terraform-deploy
+      Perform a terraform apply on *.tf file found in the terraform folder.  This created a t2.medium 'deploy-instance' which isused to deploy the green       environment
 
-* Setup and Configure Kubernetes locally
- * Use [kubernetes](https://kubernetes.io/docs/tasks/tools/) website to access install procedures for multiple OS type
-
-* Create Flask app in Container
-      
-      * The steps can be performed by running the shell script below:
-         "run_docker.sh"
-         OR
-      * Confirm kubectl install & version
-         kubectl version
-      * Build image and add a descriptive tag
-         docker build --tag riccardopixel/udacity-build-app:v1 .  
-      * Run flask app
-         docker run -d -p 8000:80 riccardopixel/udacity-build-app:v1 
-      
-      confirm access to the app by running < curl localhost:8000 > from a new terminal  
+* assign-ec2-ip
+      Obtains the ip of the newly created EC2 Instance
      
-* Run via kubectl
-  
-      * The steps can be performed by running the shell script below:
-         "run_kubernetes.sh"
-         OR
-      * Run docker image within kubernetes
-         kubectl run prediction --image=riccardopixel/udacity-build-app:v1 --port=80 --labels app=prediction
-      * List kubernetes pods
-         kubectl get pods
-         # Once pods are in a 'Ready' state  
-      * Forward the container port to a host
-         kubectl port-forward prediction 8000:80
+* configure-infrastructure
+      Uses ansible to run configure-server.yml
+      This setup up the EC2 instance ready to be able to communicate with AWS, Docker and the EKS cluster
 
----
-
-# Files in the Repository
-
-### .circleci/config.yml:
-Contains circleci jobs that tests the validity of the build of the flash-app.  The repo links with circleci to automatically run these jobs whenever changes are pushed up to this repo.  At the very top of this README.md file you can find the result of the latest commit.
-
-### docker_out.txt:
-Show the output from docker logs and a text grab post running make_prediction.sh
-
-### kubernetes_out.txt:
-Standard output to be expected from running run_kubernetes.sh
-
-### app.py:
-python script which is provided with data in json format and provides prodictions based on that data.
-
-### Dockerfile:
-Dockerfile's content is set up to be able to create a docker build from.
-
-### make_predictions.sh:
-Calls the local instance on port 8000.
-
-### Makefile:
-Makefile provides steps for building out the solution with setup, install, test & lint parameters.
-
-### requirements.txt:
-List of python module/libraries that are required for app.py.
-
-### run_docker.sh:
-Script to run through the steps to build a docker image and run the flask-app on port 8000
-
-### run_kubernetes.sh:
-Dockerpath provided from the build process in run_docker.sh. - 'docker images' can give you the repository name if required.
-Run container in Kubernetes referencing the dockerpath
-Once pods are running open up port 8000 to provide access to the app
-
-### upload_docker.sh:
-Dockerpath provided from the build process in run_docker.sh. - 'docker images' can give you the repository name if required.
-login to Docker
-push the Docker image up referencing the Dockerpath.
+* deploy-infrastructure
+      This copies the relevant files from the repo, connects to the EKS cluster, builds a docker image and exposes that image on port 8000.
+      The image is then used to run a pod within the kubernetes cluster.
+      The docker image is then pushed to docker hub.
