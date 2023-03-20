@@ -43,13 +43,22 @@
 - name: Run docker build
   command: docker build . -t riccardopixel/nginx
 
-- name: Build out Green-Svc
-  shell: |
-    dockerpath="nginx"
-    kubectl run green-svc --image=$dockerpath --port=80 --namespace udacity --labels app=green-svc
+# - name: Build out Green-Svc
+#   shell: |
+#     dockerpath="nginx"
+#     kubectl run green-svc --image=$dockerpath --port=80 --namespace udacity --labels app=green-svc
 
-- name: Port Forward green-svc
-  command: kubectl port-forward pods/green-svc 8000:80
+# - name: Port Forward green-svc
+#   command: kubectl port-forward pods/green-svc 8000:80
+
+- name: change permissions k8
+  ansible.builtin.file:
+    path: /home/ubuntu/run_kubernetes.sh
+    mode: 744
+
+- name: Run kubernetes script
+  command: /home/ubuntu/run_kubernetes.sh
+
 
 
 
