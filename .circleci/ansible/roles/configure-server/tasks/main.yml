@@ -60,7 +60,7 @@
 
 - name: Download kubectl
   ansible.builtin.get_url:
-    url: https://storage.googleapis.com/kubernetes-release/release/v1.26.2/bin/linux/amd64/kubectl
+    url: https://storage.googleapis.com/kubernetes-release/release/v1.23.6/bin/linux/amd64/kubectl
     dest: ~/kubectl
 
 - name: change permissions kubectl
