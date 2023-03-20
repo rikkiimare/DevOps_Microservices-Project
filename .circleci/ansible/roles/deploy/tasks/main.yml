@@ -24,9 +24,9 @@
 
 - name: aws configure changes
   shell: |
-    aws configure set aws_access_key_id {{ lookup('env', 'AWS_ACCESS_KEY_ID')}} --profile udacity
-    aws configure set aws_secret_access_key {{ lookup('env', 'AWS_SECRET_ACCESS_KEY')}} --profile udacity
-    aws configure set region us-east-1 --profile udacity
+    aws configure set aws_access_key_id {{ lookup('env', 'AWS_ACCESS_KEY_ID')}} --profile circleci
+    aws configure set aws_secret_access_key {{ lookup('env', 'AWS_SECRET_ACCESS_KEY')}} --profile circleci
+    aws configure set region us-east-1 --profile circleci
 
 - name: aws eks connect
   shell: |
